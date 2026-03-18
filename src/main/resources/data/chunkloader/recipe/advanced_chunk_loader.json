@@ -6,9 +6,9 @@
     "DBD"
   ],
   "key": {
-    "D": { "item": "minecraft:diamond" },
-    "B": { "item": "minecraft:blaze_rod" },
-    "C": { "item": "chunkloader:compact_chunk_loader" }
+    "D": "minecraft:diamond",
+    "B": "minecraft:blaze_rod",
+    "C": "chunkloader:compact_chunk_loader"
   },
   "result": {
     "id": "chunkloader:advanced_chunk_loader",

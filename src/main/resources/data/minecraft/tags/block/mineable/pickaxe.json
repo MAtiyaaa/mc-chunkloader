@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "chunkloader:basic_chunk_loader",
+    "chunkloader:compact_chunk_loader",
+    "chunkloader:advanced_chunk_loader",
+    "chunkloader:elite_chunk_loader",
+    "chunkloader:ultimate_chunk_loader"
+  ]
+}
