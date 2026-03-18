@@ -17,11 +17,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -141,6 +143,21 @@ public class ChunkLoaderBlock extends HorizontalFacingBlock implements BlockEnti
         tooltip.add(Text.literal("Right-click to configure").formatted(Formatting.DARK_GRAY));
         if (ModConfig.get().enableRedstoneControl) {
             tooltip.add(Text.literal("Redstone controllable").formatted(Formatting.RED));
+        }
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (state.get(ACTIVE)) {
+            double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.6;
+            double y = pos.getY() + 1.0 + random.nextDouble() * 0.3;
+            double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.6;
+            world.addParticle(ParticleTypes.END_ROD, x, y, z, 0.0, 0.03, 0.0);
+            if (random.nextInt(3) == 0) {
+                double x2 = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 1.2;
+                double z2 = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 1.2;
+                world.addParticle(ParticleTypes.PORTAL, x2, pos.getY() + 0.8, z2, 0, 0.1, 0);
+            }
         }
     }
 
