@@ -121,25 +121,49 @@ public class ModNetworking {
         PayloadTypeRegistry.playS2C().register(LoaderListResponsePayload.ID, LoaderListResponsePayload.CODEC);
     }
 
+    /**
+     * Finds the ChunkLoadingManager containing a loader at the given position.
+     * Searches the player's current world first, then all worlds.
+     */
+    private static FoundLoader findLoader(ServerPlayerEntity player, BlockPos pos) {
+        // Check player's current world first
+        ServerWorld currentWorld = player.getServerWorld();
+        ChunkLoadingManager manager = ChunkLoadingManager.get(currentWorld);
+        ChunkLoadingManager.LoaderEntry entry = manager.getLoader(pos);
+        if (entry != null) {
+            return new FoundLoader(currentWorld, manager, entry);
+        }
+        // Search all worlds (for cross-dimension management)
+        for (ServerWorld world : player.server.getWorlds()) {
+            if (world == currentWorld) continue;
+            manager = ChunkLoadingManager.get(world);
+            entry = manager.getLoader(pos);
+            if (entry != null) {
+                return new FoundLoader(world, manager, entry);
+            }
+        }
+        return null;
+    }
+
+    private record FoundLoader(ServerWorld world, ChunkLoadingManager manager, ChunkLoadingManager.LoaderEntry entry) {}
+
     public static void registerServerReceivers() {
         ServerPlayNetworking.registerGlobalReceiver(ToggleEnabledPayload.ID, (payload, context) -> {
             ServerPlayerEntity player = context.player();
             context.player().server.execute(() -> {
-                ServerWorld world = player.getServerWorld();
-                ChunkLoadingManager manager = ChunkLoadingManager.get(world);
-                ChunkLoadingManager.LoaderEntry entry = manager.getLoader(payload.pos());
-                if (entry == null) return;
+                FoundLoader found = findLoader(player, payload.pos());
+                if (found == null) return;
 
-                if (ModConfig.get().enableOwnership && !entry.owner.equals(player.getUuid())
+                if (ModConfig.get().enableOwnership && !found.entry.owner.equals(player.getUuid())
                         && !player.hasPermissionLevel(2)) {
                     player.sendMessage(Text.literal("You don't own this chunk loader.").formatted(Formatting.RED), true);
                     return;
                 }
 
-                boolean newState = manager.toggleEnabled(payload.pos());
-                BlockState blockState = world.getBlockState(payload.pos());
+                boolean newState = found.manager.toggleEnabled(payload.pos());
+                BlockState blockState = found.world.getBlockState(payload.pos());
                 if (blockState.getBlock() instanceof ChunkLoaderBlock) {
-                    world.setBlockState(payload.pos(), blockState.with(ChunkLoaderBlock.ACTIVE, newState));
+                    found.world.setBlockState(payload.pos(), blockState.with(ChunkLoaderBlock.ACTIVE, newState));
                 }
                 player.sendMessage(Text.literal("Chunk loader " + (newState ? "enabled" : "disabled") + ".")
                         .formatted(newState ? Formatting.GREEN : Formatting.RED), true);
@@ -149,24 +173,22 @@ public class ModNetworking {
         ServerPlayNetworking.registerGlobalReceiver(ToggleModePayload.ID, (payload, context) -> {
             ServerPlayerEntity player = context.player();
             context.player().server.execute(() -> {
-                ServerWorld world = player.getServerWorld();
-                ChunkLoadingManager manager = ChunkLoadingManager.get(world);
-                ChunkLoadingManager.LoaderEntry entry = manager.getLoader(payload.pos());
-                if (entry == null) return;
+                FoundLoader found = findLoader(player, payload.pos());
+                if (found == null) return;
 
-                if (ModConfig.get().enableOwnership && !entry.owner.equals(player.getUuid())
+                if (ModConfig.get().enableOwnership && !found.entry.owner.equals(player.getUuid())
                         && !player.hasPermissionLevel(2)) {
                     return;
                 }
 
                 ModConfig config = ModConfig.get();
-                boolean newCentered = manager.toggleMode(payload.pos());
+                boolean newCentered = found.manager.toggleMode(payload.pos());
                 if (newCentered && !config.allowCenteredMode) {
-                    manager.toggleMode(payload.pos());
+                    found.manager.toggleMode(payload.pos());
                     return;
                 }
                 if (!newCentered && !config.allowDirectionalMode) {
-                    manager.toggleMode(payload.pos());
+                    found.manager.toggleMode(payload.pos());
                     return;
                 }
 
@@ -178,18 +200,16 @@ public class ModNetworking {
         ServerPlayNetworking.registerGlobalReceiver(RenameLoaderPayload.ID, (payload, context) -> {
             ServerPlayerEntity player = context.player();
             context.player().server.execute(() -> {
-                ServerWorld world = player.getServerWorld();
-                ChunkLoadingManager manager = ChunkLoadingManager.get(world);
-                ChunkLoadingManager.LoaderEntry entry = manager.getLoader(payload.pos());
-                if (entry == null) return;
+                FoundLoader found = findLoader(player, payload.pos());
+                if (found == null) return;
 
-                if (ModConfig.get().enableOwnership && !entry.owner.equals(player.getUuid())
+                if (ModConfig.get().enableOwnership && !found.entry.owner.equals(player.getUuid())
                         && !player.hasPermissionLevel(2)) {
                     return;
                 }
 
                 String safeName = payload.name().length() > 64 ? payload.name().substring(0, 64) : payload.name();
-                manager.setCustomName(payload.pos(), safeName);
+                found.manager.setCustomName(payload.pos(), safeName);
                 player.sendMessage(Text.literal("Loader renamed to: " + safeName)
                         .formatted(Formatting.YELLOW), true);
             });

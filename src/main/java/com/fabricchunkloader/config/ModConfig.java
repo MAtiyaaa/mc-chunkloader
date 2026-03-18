@@ -70,7 +70,8 @@ public class ModConfig {
                 if (INSTANCE == null) {
                     INSTANCE = new ModConfig();
                 }
-            } catch (IOException e) {
+                INSTANCE.sanitize();
+            } catch (Exception e) {
                 System.err.println("[ChunkLoader] Failed to load config: " + e.getMessage());
                 INSTANCE = new ModConfig();
             }
@@ -78,6 +79,14 @@ public class ModConfig {
             INSTANCE = new ModConfig();
             save();
         }
+    }
+
+    /** Ensures no fields are null after Gson deserialization (Gson skips field initializers). */
+    private void sanitize() {
+        if (dimensionBlacklist == null) dimensionBlacklist = new ArrayList<>();
+        if (dimensionWhitelist == null) dimensionWhitelist = new ArrayList<>();
+        if (maxLoadersPerPlayer <= 0) maxLoadersPerPlayer = 16;
+        if (maxLoadersPerWorld <= 0) maxLoadersPerWorld = 256;
     }
 
     public static void save() {

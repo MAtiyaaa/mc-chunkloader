@@ -65,19 +65,24 @@ public class ChunkLoadingManager extends PersistentState {
         }
 
         public static LoaderEntry fromNbt(NbtCompound nbt) {
-            LoaderEntry entry = new LoaderEntry();
-            entry.pos = BlockPos.fromLong(nbt.getLong("pos"));
-            entry.owner = nbt.getUuid("owner");
-            entry.ownerName = nbt.getString("ownerName");
-            entry.tier = ChunkLoaderTier.fromId(nbt.getString("tier"));
-            entry.enabled = nbt.getBoolean("enabled");
-            entry.centered = nbt.getBoolean("centered");
-            entry.facing = Direction.byId(nbt.getInt("facing"));
-            entry.customName = nbt.getString("customName");
-            if (entry.facing.getAxis() == Direction.Axis.Y) {
-                entry.facing = Direction.NORTH;
+            try {
+                LoaderEntry entry = new LoaderEntry();
+                entry.pos = BlockPos.fromLong(nbt.getLong("pos"));
+                entry.owner = nbt.containsUuid("owner") ? nbt.getUuid("owner") : new UUID(0, 0);
+                entry.ownerName = nbt.contains("ownerName") ? nbt.getString("ownerName") : "";
+                entry.tier = ChunkLoaderTier.fromId(nbt.getString("tier"));
+                entry.enabled = nbt.getBoolean("enabled");
+                entry.centered = nbt.getBoolean("centered");
+                entry.facing = Direction.byId(nbt.getInt("facing"));
+                entry.customName = nbt.contains("customName") ? nbt.getString("customName") : "";
+                if (entry.facing.getAxis() == Direction.Axis.Y) {
+                    entry.facing = Direction.NORTH;
+                }
+                return entry;
+            } catch (Exception e) {
+                System.err.println("[ChunkLoader] Failed to deserialize loader entry: " + e.getMessage());
+                return null;
             }
-            return entry;
         }
     }
 
@@ -106,10 +111,14 @@ public class ChunkLoadingManager extends PersistentState {
 
     private static ChunkLoadingManager fromNbt(NbtCompound nbt) {
         ChunkLoadingManager manager = new ChunkLoadingManager();
-        NbtList list = nbt.getList("loaders", NbtElement.COMPOUND_TYPE);
-        for (int i = 0; i < list.size(); i++) {
-            LoaderEntry entry = LoaderEntry.fromNbt(list.getCompound(i));
-            manager.loaders.put(entry.pos, entry);
+        if (nbt.contains("loaders")) {
+            NbtList list = nbt.getList("loaders", NbtElement.COMPOUND_TYPE);
+            for (int i = 0; i < list.size(); i++) {
+                LoaderEntry entry = LoaderEntry.fromNbt(list.getCompound(i));
+                if (entry != null) {
+                    manager.loaders.put(entry.pos, entry);
+                }
+            }
         }
         return manager;
     }
