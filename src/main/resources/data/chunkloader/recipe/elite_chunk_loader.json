@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ENE",
+    "NAN",
+    "ENE"
+  ],
+  "key": {
+    "E": { "item": "minecraft:emerald_block" },
+    "N": { "item": "minecraft:nether_star" },
+    "A": { "item": "chunkloader:advanced_chunk_loader" }
+  },
+  "result": {
+    "id": "chunkloader:elite_chunk_loader",
+    "count": 1
+  }
+}

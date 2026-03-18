@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "chunkloader",
+  "version": "${version}",
+  "name": "Fabric Chunk Loader",
+  "description": "A powerful chunk loading mod for Fabric. Place chunk loaders to keep areas loaded for AFK farming. Supports multiple tiers, centered and directional modes, and a full management GUI.",
+  "authors": [
+    "FabricChunkLoader"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/chunkloader/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.fabricchunkloader.FabricChunkLoader"
+    ],
+    "client": [
+      "com.fabricchunkloader.FabricChunkLoaderClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

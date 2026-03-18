@@ -1,0 +1,15 @@
+{
+  "block.chunkloader.basic_chunk_loader": "Basic Chunk Loader",
+  "block.chunkloader.compact_chunk_loader": "Compact Chunk Loader",
+  "block.chunkloader.advanced_chunk_loader": "Advanced Chunk Loader",
+  "block.chunkloader.elite_chunk_loader": "Elite Chunk Loader",
+  "block.chunkloader.ultimate_chunk_loader": "Ultimate Chunk Loader",
+  "item.chunkloader.basic_chunk_loader": "Basic Chunk Loader",
+  "item.chunkloader.compact_chunk_loader": "Compact Chunk Loader",
+  "item.chunkloader.advanced_chunk_loader": "Advanced Chunk Loader",
+  "item.chunkloader.elite_chunk_loader": "Elite Chunk Loader",
+  "item.chunkloader.ultimate_chunk_loader": "Ultimate Chunk Loader",
+  "itemGroup.chunkloader.chunk_loaders": "Chunk Loaders",
+  "screen.chunkloader.chunk_loader": "Chunk Loader",
+  "screen.chunkloader.management": "Chunk Loader Manager"
+}
