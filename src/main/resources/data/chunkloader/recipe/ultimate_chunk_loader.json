@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NSN",
+    "SES",
+    "NSN"
+  ],
+  "key": {
+    "N": "minecraft:netherite_ingot",
+    "S": "minecraft:shulker_shell",
+    "E": "chunkloader:elite_chunk_loader"
+  },
+  "result": {
+    "id": "chunkloader:ultimate_chunk_loader",
+    "count": 1
+  }
+}

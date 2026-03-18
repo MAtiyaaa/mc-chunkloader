@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "chunkloader:block/compact_chunk_loader_top_active",
+    "front": "chunkloader:block/compact_chunk_loader_front_active",
+    "side": "chunkloader:block/compact_chunk_loader_side"
+  }
+}

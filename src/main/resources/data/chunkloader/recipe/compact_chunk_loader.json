@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GEG",
+    "ECE",
+    "GEG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "E": "minecraft:ender_pearl",
+    "C": "chunkloader:basic_chunk_loader"
+  },
+  "result": {
+    "id": "chunkloader:compact_chunk_loader",
+    "count": 1
+  }
+}

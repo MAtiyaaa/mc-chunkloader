@@ -1,0 +1,12 @@
+build/
+.gradle/
+run/
+.fabric/
+*.py
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+bin/
+out/

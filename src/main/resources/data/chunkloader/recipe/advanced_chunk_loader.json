@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DBD",
+    "BCB",
+    "DBD"
+  ],
+  "key": {
+    "D": "minecraft:diamond",
+    "B": "minecraft:blaze_rod",
+    "C": "chunkloader:compact_chunk_loader"
+  },
+  "result": {
+    "id": "chunkloader:advanced_chunk_loader",
+    "count": 1
+  }
+}
