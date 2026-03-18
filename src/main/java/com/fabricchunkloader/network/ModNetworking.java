@@ -1,10 +1,8 @@
 package com.fabricchunkloader.network;
 
-import com.fabricchunkloader.ChunkLoaderTier;
 import com.fabricchunkloader.block.ChunkLoaderBlock;
 import com.fabricchunkloader.chunk.ChunkLoadingManager;
 import com.fabricchunkloader.config.ModConfig;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;

@@ -8,13 +8,14 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -23,6 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ChunkLoaderBlock extends HorizontalFacingBlock implements BlockEntityProvider {
     public static final MapCodec<ChunkLoaderBlock> CODEC = createCodec(
@@ -129,6 +132,16 @@ public class ChunkLoaderBlock extends HorizontalFacingBlock implements BlockEnti
     @Override
     protected BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
+        tooltip.add(Text.literal(tier.getSize() + "\u00D7" + tier.getSize() + " chunks (" + tier.getTotalChunks() + " total)")
+                .formatted(Formatting.GRAY));
+        tooltip.add(Text.literal("Right-click to configure").formatted(Formatting.DARK_GRAY));
+        if (ModConfig.get().enableRedstoneControl) {
+            tooltip.add(Text.literal("Redstone controllable").formatted(Formatting.RED));
+        }
     }
 
     /**
